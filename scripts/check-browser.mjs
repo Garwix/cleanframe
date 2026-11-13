@@ -348,7 +348,7 @@ try {
         await look({ bg: 'photo', layout, controls, focus: 'glass', font: 'manrope' }); await scene('home');
         if ((await call('where')).zone === 'util') await nav('back');
         await nav(layout === 'dock' ? 'up' : 'right');
-        await nav(...Array(3).fill(layout === 'dock' ? 'left' : 'up'));
+        await nav(...Array(4).fill(layout === 'dock' ? 'left' : 'up'));
         await current.waitForTimeout(180);
         const spacing = await current.evaluate(({ layout, controls }) => {
           const scale = document.getElementById('stage').getBoundingClientRect().width / 1920;
@@ -361,9 +361,9 @@ try {
           });
         }, { layout, controls });
         check(layout + '/' + controls + ' uses spacing between visible children at ' + width,
-          spacing.length === 3 && spacing.every(s => s.children === (controls === 'both' ? 2 : 1) && Math.abs(s.extraWidth - s.gap) < .5), spacing);
+          spacing.length === 4 && spacing.every(s => s.children === (controls === 'both' ? 2 : 1) && Math.abs(s.extraWidth - s.gap) < .5), spacing);
         const focused = [];
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 4; i++) {
           if (i) await nav(layout === 'dock' ? 'right' : 'down');
           focused.push(await current.evaluate(() => {
             const button = document.querySelector('#utils .u.is-focus'), lens = document.querySelector('.ut-lens.is-current');
@@ -419,7 +419,7 @@ try {
       await current.waitForSelector('[data-action="input.1"]');
       const entries = await current.locator('.section-inputs .setting-choice').allTextContents();
       check('Inputs reflect actual ports and sleeping/active status ' + layout + '/' + width,
-        entries.length === 3 && entries.some(x => /HDMI 1.*Disconnected/.test(x)) && entries.some(x => /HDMI 2.*Active/.test(x)) && !entries.some(x => /HDMI 4/.test(x)), entries);
+        entries.length === 3 && entries.some(x => /HDMI 1.*Déconnectée/.test(x)) && entries.some(x => /HDMI 2.*Active/.test(x)) && !entries.some(x => /HDMI 4/.test(x)), entries);
       check('Inputs fit and retain one focus ' + layout + '/' + width, await current.locator('.section-inputs .setting-choice').evaluateAll(elements => {
         const stage = document.getElementById('stage').getBoundingClientRect();
         return ShoreQA.where().focusCount === 1 && elements.every(e => { const r=e.getBoundingClientRect(); return r.top>=stage.top && r.bottom<=stage.bottom && r.left>=stage.left && r.right<=stage.right; });
@@ -439,19 +439,19 @@ try {
     check('Visibility return refreshes an externally changed input', !(await current.locator('[data-action="input.1"]').innerText()).includes('Active'));
     await current.evaluate(() => { __tv.sourceFailure = true; __tv.calls = []; });
     await act('input.2'); await current.waitForFunction(() => ShoreQA.state().view === 'message');
-    check('Failed input selection displays an error and keeps viewer closed', (await current.locator('#stage').innerText()).includes('could not') && await current.evaluate(() => __tv.calls.length === 1));
+    check('Failed input selection displays an error and keeps viewer closed', (await current.locator('#stage').innerText()).includes('n’a pas pu') && await current.evaluate(() => __tv.calls.length === 1));
     await nav('back', 'back');
     await current.evaluate(() => { __tv.holdInputs = true; });
     await act('samsung.inputs'); await nav('back');
     await current.evaluate(() => __tv.inputRequests.splice(0).forEach(f => f()));
     check('Late discovery cannot reopen a closed chooser', (await state()).settingsGroup === 'samsung' && (await call('where')).focusCount === 1);
     await closePage(); await page({ inputUnavailable: true }); await group('samsung'); await act('samsung.inputs');
-    check('Unavailable source API offers retry without invented ports', !(await current.locator('[data-action^="input."]').count()) && (await current.locator('#stage').innerText()).includes('Open CleanFrame on the TV'));
+    check('Unavailable source API offers retry without invented ports', !(await current.locator('[data-action^="input."]').count()) && (await current.locator('#stage').innerText()).includes('Ouvrez CleanFrame sur la TV'));
     await nav('back'); check('Unavailable inputs remain escapable', (await state()).settingsGroup === 'samsung');
     await closePage(); await page(); await current.evaluate(() => { __tv.videoSources = { connected: [], disconnected: [] }; });
     await group('samsung'); await act('samsung.inputs');
     await current.waitForSelector('[data-action="inputs.retry"]');
-    check('Empty inventory is truthful', (await current.locator('#stage').innerText()).includes('No HDMI inputs were reported'));
+    check('Empty inventory is truthful', (await current.locator('#stage').innerText()).includes('aucune entrée HDMI'));
   });
   await run('Real catalogue and native launch boundary', async () => {
     await page(); await library();
@@ -459,7 +459,7 @@ try {
     check('Consumer catalogue excludes services, self and duplicate YouTube', names.length === 12 && names.filter(n => n === 'YouTube').length === 1 && !names.includes('CleanFrame') && !names.includes('Background worker'), names);
     check('Installed names stay text, including HTML punctuation', names.includes(UNSAFE_NAME) && !(await current.evaluate(() => window.__catalogXss)));
     check('Exploration fixtures do not appear', !names.includes('Plex') && !names.includes('Jellyfin'));
-    await act('apps.open.' + SPOTIFY); await current.waitForFunction(() => __tv.calls.length > 0);
+    await act('apps.open.spotify'); await current.waitForFunction(() => __tv.calls.length > 0);
     check('Extra-brand app launches native ID', (await current.evaluate(() => __tv.calls.at(-1))).id === SPOTIFY);
     await current.evaluate(() => window.dispatchEvent(new Event('focus')));
     await scene('home'); await act('home.app.netflix'); await current.waitForFunction(() => __tv.calls.length === 2);
@@ -476,7 +476,7 @@ try {
     check('TV settings keeps installed target', (await current.evaluate(() => __tv.calls.at(-1))).id === 'com.samsung.tv.coba.setting');
     await current.evaluate(() => { window.dispatchEvent(new Event('focus')); __tv.launchFailure = true; });
     await scene('home'); await act('home.app.netflix'); await current.waitForFunction(() => ShoreQA.where().view === 'message');
-    check('Launch failure is shown', /could not|unavailable|try again/i.test(await current.locator('#stage').innerText()));
+    check('Launch failure is shown', /impossible|n’a pas pu|réessayer/i.test(await current.locator('#stage').innerText()));
   });
   await run('Independent app identity self-filter', async () => {
     const appId = 'AbCdEf1234.MyHome';
@@ -551,7 +551,7 @@ try {
     await page(); await editor(); const before = await stored();
     await current.evaluate(() => { window.__failWrites = true; }); await remove('netflix');
     check('Failed removal changes neither committed state nor storage', same((await state()).dock, before.dock) && same(await stored(), before));
-    check('Failed write gives visible feedback', /not saved|couldn.t save|tries again/i.test(await current.locator('#stage').innerText()));
+    check('Failed write gives visible feedback', /non enregistré|enregistrement impossible|réessayer/i.test(await current.locator('#stage').innerText()));
     await current.evaluate(() => { window.__failWrites = false; }); await nav('ok');
     check('Retry commits through same action', !(await stored()).dock.includes('netflix'));
     await scene('home'); const old = await state(), oldStored = await stored();
@@ -718,7 +718,7 @@ try {
       await walkEnabledChoices();
       check('Remote navigation skips inactive Material', same(await settingsSnapshot(), before));
       const reason = await current.locator('.setting-reason:visible').allTextContents();
-      check('Inactive Material has a visible explanation', reason.some(text => /material/i.test(text) && text.length > 20), reason);
+      check('Inactive Material has a visible explanation', reason.some(text => /matière/i.test(text) && text.length > 20), reason);
     }
     await look({ bg: 'photo', layout: 'dock', focus: 'glass' }); await group('focus');
     const materials = (await radios()).filter(r => r.action.startsWith('choice.material.'));
@@ -878,14 +878,14 @@ try {
   });
   await run('Wallpaper applies in place and Back keeps the latest applied photo', async () => {
     await page(); await wallpaper(); const before = await wallpaperSaved();
-    check('Applied wallpaper omits the redundant Apply hint', !/apply.*photo/i.test(await current.locator('#appearanceDesc').innerText()));
+    check('Applied wallpaper omits the redundant Apply hint', !/appliquer.*photo/i.test(await current.locator('#appearanceDesc').innerText()));
     await nav('down'); await wallpaperSettled(walls[1].id);
     check('A browsed photo is not saved by focus', same(await wallpaperSaved(), before));
-    check('Unsaved preview explains the OK action', /apply.*photo/i.test(await current.locator('#appearanceDesc').innerText()));
+    check('Unsaved preview explains the OK action', /appliquer.*photo/i.test(await current.locator('#appearanceDesc').innerText()));
     await nav('ok'); await ready();
     const applied = await wallpaperSaved();
     check('OK applies once while staying inside Wallpaper', (await state()).view === 'wallpaper' && applied.committed.wall === walls[1].id && applied.writes === before.writes + 1 && applied.attempts === before.attempts + 1 && same(await wallpaperApplied(), ['wallpaper.choose.' + walls[1].id]));
-    check('Successful apply clears its redundant Apply hint', !/apply.*photo/i.test(await current.locator('#appearanceDesc').innerText()));
+    check('Successful apply clears its redundant Apply hint', !/appliquer.*photo/i.test(await current.locator('#appearanceDesc').innerText()));
     check('Applied photo updates the committed Settings backdrop', applied.backdrop.src.includes('/' + walls[1].id + '-panel.jpg'));
     await nav('ok'); await current.keyboard.down('Enter'); await current.keyboard.down('Enter'); await current.keyboard.up('Enter');
     check('Repeated OK on the applied photo is a no-op', same(await wallpaperSaved(), applied));
@@ -904,7 +904,7 @@ try {
     await page(); await wallpaper(); const before = await wallpaperSaved();
     await nav('up');
     check('Up from the first wallpaper reaches Back without wrapping', (await state()).focusAction === 'wallpaper.back' && (await state()).shown.wall === walls[0].id);
-    check('Back still shows its return hint', /background|return/i.test(await current.locator('#appearanceDesc').innerText()));
+    check('Back still shows its return hint', /arrière-plan|revenir/i.test(await current.locator('#appearanceDesc').innerText()));
     await nav('down');
     check('Down from Back restores the current candidate', (await state()).focusAction === 'wallpaper.choose.' + walls[0].id);
     await nav(...Array(walls.length - 1).fill('down')); await wallpaperSettled(walls.at(-1).id); await wallpaperRowVisible(walls.at(-1).id);
@@ -988,7 +988,7 @@ try {
     await current.route(pattern, route => route.abort('failed'));
     await nav('down'); await current.waitForFunction(() => ShoreQA.actions().includes('wallpaper.retry'));
     check('Failed browse restores the committed frame rather than another unsaved preview', (await state()).shown.wall === before.committed.wall && same(await wallpaperSaved(), before) && same(await wallpaperApplied(), ['wallpaper.choose.' + before.committed.wall]));
-    check('Failed candidate remains identified for retry', (await state()).wallpaperPicker.candidate === target && /couldn.t|failed|try again/i.test(await current.locator('#appearance').innerText()));
+    check('Failed candidate remains identified for retry', (await state()).wallpaperPicker.candidate === target && /impossible|échec|réessayer/i.test(await current.locator('#appearance').innerText()));
     await current.unroute(pattern); await act('wallpaper.retry'); await wallpaperSettled(target);
     check('Retrying a failed browse does not authorise a save', same(await wallpaperSaved(), before) && !(await state()).wallpaperPicker.applyPending);
     check('Successful preview Retry returns focus to its candidate', (await state()).focusAction === 'wallpaper.choose.' + target);

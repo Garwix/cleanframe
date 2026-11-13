@@ -51,7 +51,7 @@ test('catalogue timeout and late callbacks finish only once', () => {
   assert.equal(results.length, 0);
   h.advance(1);
   assert.equal(results.length, 1);
-  assert.match(results[0].error.message, /did not respond/);
+  assert.match(results[0].error.message, /n’a pas répondu/);
   h.requests[0].ok([]);
   h.requests[0].fail({ message: 'Late failure' });
   assert.equal(results.length, 1);
@@ -81,7 +81,7 @@ test('launch keeps its eight-second deadline independently of discovery', () => 
   h.device.launchApp('Synthetic.App', error => results.push(error));
   h.advance(8000);
   assert.equal(results.length, 1);
-  assert.match(results[0].message, /did not respond/);
+  assert.match(results[0].message, /n’a pas répondu/);
   h.launches[0].ok();
   assert.equal(results.length, 1);
 });
@@ -160,4 +160,23 @@ test('unknown and invalid ports cannot be substituted and a newer request cancel
   assert.equal(results[0].cancelled, true);
   h.sourceRequests[0].ok(video); assert.equal(h.changes.length, 0);
   h.sourceRequests[1].ok(video); assert.equal(h.changes[0].source.number, 2);
+});
+
+test('French regional apps are recognised by their installed name', () => {
+  const h = harness();
+  let apps;
+  h.device.apps((error, value) => { assert.equal(error, null); apps = value; });
+  h.requests[0].ok([
+    { id: 'Canal12345.MyCanal', name: 'CANAL+', show: true, iconPath: '/icons/canal.png' },
+    { id: 'Arte123456.ArteTV', name: 'ARTE', show: true },
+    { id: 'Ligue12345.Ligue1', name: 'Ligue 1+', show: true },
+    { id: 'rJeHak5zRg.Spotify', name: 'Spotify', show: true },
+    { id: 'Arter12345.Other', name: 'Artemis Radio', show: true }
+  ]);
+  const brand = id => apps.find(a => a.appId === id).brand;
+  assert.equal(brand('Canal12345.MyCanal'), 'canalplus');
+  assert.equal(brand('Arte123456.ArteTV'), 'arte');
+  assert.equal(brand('Ligue12345.Ligue1'), 'ligue1plus');
+  assert.equal(brand('rJeHak5zRg.Spotify'), 'spotify');
+  assert.equal(brand('Arter12345.Other'), '');
 });

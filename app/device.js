@@ -6,8 +6,15 @@
     disneyplus: 'MCmYXNxgcu.DisneyPlus', youtube: '9Ur5IzDKqV.TizenYouTube',
     appletv: 'com.samsung.tv.aria-video', primevideo: 'org.tizen.primevideo',
     abciview: 'mWK87Xghap.ABCiview', sbs: 'OyE7OuxlUi.SBSOnDemand',
-    applemusic: 'org.tizen.apple.apple-music'
+    applemusic: 'org.tizen.apple.apple-music', spotify: 'rJeHak5zRg.Spotify'
   };
+  /* Regional apps whose Tizen IDs are not published: match the installed app's name. */
+  var NAMED = [['canalplus', /^(?:my\s*)?canal\s*\+/i], ['arte', /^arte(?:\.tv)?(?:\s|$)/i], ['ligue1plus', /^ligue\s*1\s*\+/i]];
+  function namedBrand(name) {
+    var i;
+    for (i = 0; i < NAMED.length; i++) if (NAMED[i][1].test(String(name || '').replace(/^\s+/, ''))) return NAMED[i][0];
+    return '';
+  }
   var STREAMING = ['as6cYRgkPy.Binge', '73iTZRTc34.Stan', '5b8c3eb16b.BeamCTVDev',
     'cj37Ni3qXM.HBONow', 'LBUAQX1exg.Hulu', 'gzcc4LRFBF.Peacock', 'rJyOSqC6Up.CBSAllAccess',
     'Rk72oKFsRS.OtterKidsProd', '70fRFUwYlD.OtterGAProd', 'PvWgqxV3Xa.YouTubeTV',
@@ -27,13 +34,13 @@
     catch (err) { return SELF; }
   }
   function unavailable(done) {
-    done({ message: 'Open CleanFrame on the TV to use this control.', detail: 'The web preview cannot control the TV.' });
+    done({ message: 'Ouvrez CleanFrame sur la TV pour utiliser cette commande.', detail: 'L’aperçu web ne peut pas piloter la TV.' });
   }
   function failure(err) {
-    return { message: 'The TV could not open this screen.', detail: err && (err.message || err.name) || 'Try again, or press the remote’s Home button to return to CleanFrame.' };
+    return { message: 'La TV n’a pas pu ouvrir cet écran.', detail: err && (err.message || err.name) || 'Réessayez, ou appuyez sur le bouton Accueil de la télécommande pour revenir à CleanFrame.' };
   }
   function bounded(done, timeout) {
-    var finished = false, timer = setTimeout(function () { finish({ message: 'The TV did not respond. Please try again.' }); }, timeout || 8000);
+    var finished = false, timer = setTimeout(function () { finish({ message: 'La TV n’a pas répondu. Veuillez réessayer.' }); }, timeout || 8000);
     function finish(err, value) { if (finished) return; finished = true; clearTimeout(timer); done(err, value); }
     return finish;
   }
@@ -66,32 +73,32 @@
   function setSource(port, done) {
     cancelSource();
     var tvw = window.tizen && window.tizen.tvwindow, app = api(), finished = false;
-    if (typeof port !== 'number' || !isFinite(port) || port < 0 || Math.floor(port) !== port) { done({ message: 'This HDMI input is not available.' }); return; }
+    if (typeof port !== 'number' || !isFinite(port) || port < 0 || Math.floor(port) !== port) { done({ message: 'Cette entrée HDMI n’est pas disponible.' }); return; }
     if (!tvw || typeof tvw.setSource !== 'function' || !app || typeof app.launch !== 'function') { unavailable(done); return; }
-    var timer = setTimeout(function () { finish({ message: 'The TV did not respond. Please try again.' }); }, 8000);
+    var timer = setTimeout(function () { finish({ message: 'La TV n’a pas répondu. Veuillez réessayer.' }); }, 8000);
     function finish(err, value) {
       if (finished) return;
       finished = true; clearTimeout(timer);
       if (sourceCancel === cancel) sourceCancel = null;
       done(err, value);
     }
-    function cancel() { finish({ message: 'Input change cancelled.', cancelled: true }); }
+    function cancel() { finish({ message: 'Changement d’entrée annulé.', cancelled: true }); }
     sourceCancel = cancel;
     sources(function (err, list) {
       if (finished) return;
       if (err) { finish(err); return; }
       var input = null;
       list.some(function (item) { if (item.number === port) { input = item; return true; } return false; });
-      if (!input) { finish({ message: 'This HDMI input is no longer available.' }); return; }
+      if (!input) { finish({ message: 'Cette entrée HDMI n’est plus disponible.' }); return; }
       try {
         tvw.setSource(input.source, function (selected) {
           if (finished) return;
-          if (selected && (selected.type !== 'HDMI' || selected.number !== port)) { finish({ message: 'The TV selected a different input. Please try again.' }); return; }
+          if (selected && (selected.type !== 'HDMI' || selected.number !== port)) { finish({ message: 'La TV a sélectionné une autre entrée. Veuillez réessayer.' }); return; }
           try {
             app.launch('org.tizen.tv-viewer', function () { finish(null, input); }, function () {
-              finish({ message: 'The input was selected, but the TV viewer could not open.', detail: 'Use the remote’s Source control to view the input.' });
+              finish({ message: 'L’entrée est sélectionnée, mais l’affichage TV n’a pas pu s’ouvrir.', detail: 'Utilisez le bouton Source de la télécommande pour afficher l’entrée.' });
             });
-          } catch (error) { finish({ message: 'The input was selected, but the TV viewer could not open.' }); }
+          } catch (error) { finish({ message: 'L’entrée est sélectionnée, mais l’affichage TV n’a pas pu s’ouvrir.' }); }
         }, function (error) { if (!finished) finish(failure(error)); });
       } catch (error) { finish(failure(error)); }
     });
@@ -103,7 +110,7 @@
     catch (err) { finish(failure(err)); }
   }
   function launch(brand, done) {
-    if (!IDS[brand]) { done({message: 'This app has no launch target.'}); return; }
+    if (!IDS[brand]) { done({message: 'Cette appli n’a pas de cible de lancement.'}); return; }
     launchApp(IDS[brand], done);
   }
   function art(done) {
@@ -126,13 +133,13 @@
         var known = {}, seen = {}, result = [], self = selfId();
         Object.keys(IDS).forEach(function (brand) { known[IDS[brand]] = brand; });
         list.forEach(function (a) {
-          var primary = !!known[a.id], stream = STREAMING.indexOf(a.id) >= 0;
+          var named = known[a.id] ? '' : namedBrand(a.name), primary = !!known[a.id] || !!named, stream = STREAMING.indexOf(a.id) >= 0;
           var consumer = /^[A-Za-z0-9]{10}\.[A-Za-z0-9_-]+$/.test(a.id) || CONSUMER_SYSTEM.indexOf(a.id) >= 0;
           if (a.id === self || INTERNAL.indexOf(a.id) >= 0 || seen[a.id] || !a.name || (!primary && !stream && (!a.show || !consumer))) return;
           if (!primary && /(?:service|worker|preview|promotion|plugin|launcher|test|sdk|^ep[ -]|factory|daemon)/i.test(a.name + ' ' + a.id)) return;
           if (/-dummy$/.test(a.id) || a.id === 'com.samsung.tv.cobalt-yt') return;
           seen[a.id] = true;
-          result.push({ appId: a.id, name: a.name, brand: known[a.id] || EXTRA_BRANDS[a.id] || '', icon: a.iconPath || '', rank: primary ? Object.keys(IDS).indexOf(known[a.id]) : (stream ? 20 : 30) });
+          result.push({ appId: a.id, name: a.name, brand: known[a.id] || named || EXTRA_BRANDS[a.id] || '', icon: a.iconPath || '', rank: known[a.id] ? Object.keys(IDS).indexOf(known[a.id]) : named ? 15 : (stream ? 20 : 30) });
         });
         result.sort(function (a, b) { return a.rank - b.rank || a.name.toLowerCase().localeCompare(b.name.toLowerCase()); });
         finish(null, result);

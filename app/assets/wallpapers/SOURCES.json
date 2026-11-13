@@ -1,7 +1,18 @@
 [
   {
+    "id": "marseille",
+    "name": "Vieux-Port de Marseille",
+    "src": "assets/wallpapers/marseille.jpg",
+    "thumb": "assets/wallpapers/marseille-thumb.jpg",
+    "pos": "80% 50%",
+    "tone": "light",
+    "credit": "Velvet (Wikimedia Commons), CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Marseille_vieux_port_pano.jpg",
+    "license": "CC BY-SA 4.0"
+  },
+  {
     "id": "misty",
-    "name": "Misty coast",
+    "name": "Côte brumeuse",
     "src": "assets/wallpapers/misty.jpg",
     "thumb": "assets/wallpapers/misty-thumb.jpg",
     "pos": "50% 50%",
@@ -11,7 +22,7 @@
   },
   {
     "id": "cove",
-    "name": "Quiet cove",
+    "name": "Crique paisible",
     "src": "assets/wallpapers/cove.jpg",
     "thumb": "assets/wallpapers/cove-thumb.jpg",
     "pos": "50% 50%",
@@ -21,7 +32,7 @@
   },
   {
     "id": "forest",
-    "name": "Forest mist",
+    "name": "Forêt dans la brume",
     "src": "assets/wallpapers/forest.jpg",
     "thumb": "assets/wallpapers/forest-thumb.jpg",
     "pos": "50% 50%",
@@ -31,7 +42,7 @@
   },
   {
     "id": "valley",
-    "name": "Mountain valley",
+    "name": "Vallée de montagne",
     "src": "assets/wallpapers/valley.jpg",
     "thumb": "assets/wallpapers/valley-thumb.jpg",
     "pos": "50% 50%",
@@ -41,7 +52,7 @@
   },
   {
     "id": "night",
-    "name": "Desert stars",
+    "name": "Étoiles du désert",
     "src": "assets/wallpapers/night.jpg",
     "thumb": "assets/wallpapers/night-thumb.jpg",
     "pos": "50% 50%",
@@ -51,7 +62,7 @@
   },
   {
     "id": "peaks",
-    "name": "Blue peaks",
+    "name": "Sommets bleus",
     "src": "assets/wallpapers/peaks.jpg",
     "thumb": "assets/wallpapers/peaks-thumb.jpg",
     "pos": "50% 50%",
@@ -61,7 +72,7 @@
   },
   {
     "id": "bridge",
-    "name": "Bridge at dusk",
+    "name": "Pont au crépuscule",
     "src": "assets/wallpapers/bridge.jpg",
     "thumb": "assets/wallpapers/bridge-thumb.jpg",
     "pos": "50% 50%",
@@ -71,7 +82,7 @@
   },
   {
     "id": "ridge",
-    "name": "Sunlit ridges",
+    "name": "Crêtes ensoleillées",
     "src": "assets/wallpapers/ridge.jpg",
     "thumb": "assets/wallpapers/ridge-thumb.jpg",
     "pos": "50% 50%",
@@ -81,7 +92,7 @@
   },
   {
     "id": "golden",
-    "name": "Golden hour",
+    "name": "Heure dorée",
     "src": "assets/wallpapers/golden.jpg",
     "thumb": "assets/wallpapers/golden-thumb.jpg",
     "pos": "50% 50%",
@@ -91,7 +102,7 @@
   },
   {
     "id": "summit",
-    "name": "Sunlit summits",
+    "name": "Sommets au soleil",
     "src": "assets/wallpapers/summit.jpg",
     "thumb": "assets/wallpapers/summit-thumb.jpg",
     "pos": "50% 50%",
@@ -101,7 +112,7 @@
   },
   {
     "id": "goldcoast",
-    "name": "Gold Coast dusk",
+    "name": "Gold Coast au crépuscule",
     "src": "assets/wallpapers/goldcoast.jpg",
     "thumb": "assets/wallpapers/goldcoast-thumb.jpg",
     "pos": "50% 50%",
@@ -111,7 +122,7 @@
   },
   {
     "id": "sydney",
-    "name": "Sydney Harbour",
+    "name": "Port de Sydney",
     "src": "assets/wallpapers/sydney.jpg",
     "thumb": "assets/wallpapers/sydney-thumb.jpg",
     "pos": "50% 50%",
@@ -121,7 +132,7 @@
   },
   {
     "id": "amber",
-    "name": "Amber hills",
+    "name": "Collines ambrées",
     "src": "assets/wallpapers/amber.jpg",
     "thumb": "assets/wallpapers/amber-thumb.jpg",
     "pos": "50% 50%",
@@ -131,7 +142,7 @@
   },
   {
     "id": "mint",
-    "name": "Mint wave",
+    "name": "Vague menthe",
     "src": "assets/wallpapers/mint.jpg",
     "thumb": "assets/wallpapers/mint-thumb.jpg",
     "pos": "50% 50%",
@@ -141,7 +152,7 @@
   },
   {
     "id": "alpine",
-    "name": "Alpine glow",
+    "name": "Lueur alpine",
     "src": "assets/wallpapers/alpine.jpg",
     "thumb": "assets/wallpapers/alpine-thumb.jpg",
     "pos": "50% 50%",

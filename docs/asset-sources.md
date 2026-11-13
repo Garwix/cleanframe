@@ -19,6 +19,7 @@ Reviewed on 20 October 2026. Each of the fifteen linked Unsplash photo pages dis
 | Amber hills | Chris Barbalis | [Photo page](https://unsplash.com/photos/vazZtmYFgFY) |
 | Mint wave | MagicPattern | [Photo page](https://unsplash.com/photos/87PP9Zd7MNo) |
 | Alpine glow | Cristina Gottardi | [Photo page](https://unsplash.com/photos/CSpjU6hYo_0) |
+| Vieux-Port de Marseille | Velvet (Wikimedia Commons) | [File page](https://commons.wikimedia.org/wiki/File:Marseille_vieux_port_pano.jpg), [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) |
 
 The background preparation and material rendering steps are described in [asset generation](assets.md). Full-size original photos and research studies are outside the public source.
 
