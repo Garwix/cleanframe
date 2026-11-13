@@ -2,7 +2,7 @@
 
 ## Home
 
-- This fork's interface is in French. The Home controls are Entrées HDMI, Mode Art, Toutes les applis and Réglages.
+- This fork's interface is in French. The Home controls are Entrées HDMI, Toutes les applis and Réglages; the Art Mode control is hidden (`SHOW_ART` in `main.js`) because the target TV is not a Frame.
 - Dock: Left/Right scrolls the apps without wrapping. Up enters the top-right controls, starting with Entrées HDMI or the last selected control. Left/Right moves between Entrées HDMI, Art Mode, All apps and Settings. Down or Back returns to the selected app. The clock is at the top left.
 - List: Up/Down scrolls the apps without wrapping. Right enters the bottom-right controls, aligned with the clock above. Up/Down moves between Entrées HDMI, Art Mode, All apps and Settings. Left or Back returns to the selected app. The list fades at both ends as it scrolls.
 - OK opens the selected item. Focus alone never launches an app.

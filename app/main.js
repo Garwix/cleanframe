@@ -509,7 +509,9 @@
   }
 
   /* ---------- Navigation targets ---------- */
-  function utils() { return ['inputs', 'art', 'apps', 'settings']; }
+  /* This fork targets a non-Frame TV (no Art Mode), so the Art control is hidden. */
+  var SHOW_ART = false;
+  function utils() { return SHOW_ART ? ['inputs', 'art', 'apps', 'settings'] : ['inputs', 'apps', 'settings']; }
   /* prev/next run along the apps; out goes to the controls, inn comes back (or to a per-app action). */
   function axes() {
     var v = S.c.layout === 'list';
